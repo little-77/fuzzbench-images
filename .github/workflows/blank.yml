@@ -25,7 +25,7 @@ jobs:
         uses: x-actions/python3-cisctl@v1
         env:
           GIT_ORG: "little77"
-          GIT_REPO: "gcr.io"
+          GIT_REPO: "fuzzbench-images"
           GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SRC_IMAGE_LIST_URL: "https://raw.githubusercontent.com/little-77/fuzzbench-images/main/dispatcher"
           DEST_REPO: "docker.io/gcriofuzzbench"
