@@ -21,14 +21,6 @@ jobs:
   cloud-builders:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout result branch
-        uses: actions/checkout@v3
-        with:
-          repository: x-mirrors/gcr.io
-          ref: 'fuzzbench'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: gcr.io
-
       - name: Container Images Sync
         uses: x-actions/python3-cisctl@v1
         env:
