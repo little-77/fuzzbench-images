@@ -1,13 +1,45 @@
-- name: Container Images Sync
-      uses: x-actions/python3-cisctl@v1
-      env:
-        GIT_ORG: "little-77"
-        GIT_REPO: "fuzzbench-images"
-        GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SRC_IMAGE_LIST_URL: "https://raw.githubusercontent.com/little-77/fuzzbench-images/main/dispatcher"
-        DEST_REPO: "docker.io/gcmirrors"
-        SRC_TRANSPORT: "docker"
-        DEST_TRANSPORT: "docker"
-        DEST_TRANSPORT_USER: "little77"
-        DEST_TRANSPORT_PASSWORD: "950310CCyy"
-        LOG_LEVEL: "DEBUG"
+name: gcr.io/fuzzbench
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'run action reason'
+        required: false
+        type: string
+        default: 'manually test'
+  schedule:
+    - cron: '* 0 * * *'
+  push:
+      branches:
+        - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  cloud-builders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout result branch
+        uses: actions/checkout@v3
+        with:
+          repository: x-mirrors/gcr.io
+          ref: 'fuzzbench'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: gcr.io
+
+      - name: Container Images Sync
+        uses: x-actions/python3-cisctl@v1
+        env:
+          GIT_ORG: "x-mirrors"
+          GIT_REPO: "gcr.io"
+          GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SRC_IMAGE_LIST_URL: "https://raw.githubusercontent.com/little-77/fuzzbench-images/main/dispatcher"
+          DEST_REPO: "docker.io/gcriofuzzbench"
+          SRC_TRANSPORT: "docker"
+          DEST_TRANSPORT: "docker"
+          DEST_TRANSPORT_USER: "little77"
+          DEST_TRANSPORT_PASSWORD: "950310CCyy"
+
+   
